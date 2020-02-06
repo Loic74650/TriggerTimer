@@ -31,7 +31,7 @@ const int maxAllowedWrites = 200;//not sure what this is for
 
 String command;
 
-//Queue object to store incoming JSON commands (up to 10)
+//Queue object to store incoming JSON commands (up to 5)
 Queue<String> queue = Queue<String>(5);
 
 //buffers for MQTT string payload
@@ -60,7 +60,7 @@ MQTTClient MQTTClient;
 const char* MqttServerIP = "192.168.0.38";
 const char* MqttServerClientID = "ArduinoTrigger"; // /!\ choose a client ID which is unique to this Arduino board
 const char* MqttServerLogin = "admin";  //replace by const char* MqttServerLogin = nullptr; in case broker does not require a login/pwd
-const char* MqttServerPwd = "Lel1admv"; //replace by const char* MqttServerPwd = nullptr; in case broker does not require a login/pwd
+const char* MqttServerPwd = "XXXXX"; //replace by const char* MqttServerPwd = nullptr; in case broker does not require a login/pwd
 const char* TrigTopic = "Hololab/Trigger";
 const char* TrigTopicAPI = "Hololab/Trigger/API";
 const char* TrigTopicStatus = "Hololab/Trigger/status";
