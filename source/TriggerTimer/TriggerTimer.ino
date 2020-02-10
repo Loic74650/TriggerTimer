@@ -9,6 +9,8 @@ https://github.com/prampec/arduino-softtimer (rev 3.1.3)
 https://github.com/bblanchon/ArduinoJson (rev 5.13.4)
 https://github.com/sdesalas/Arduino-Queue.h (rev )
 
+{"Delays":[1200,000,380]}
+
 */
 #include <Ethernet.h>
 #include <MQTT.h>
@@ -260,6 +262,7 @@ void ProcessCommand(String JSONCommand)
           delay1 = storage.Delay1 = Delays[0];
           delay2 = storage.Delay2 = Delays[1];
           delayAMP = storage.DelayAMP = Delays[2];
+          delayPC = delay1 - delayAMP - PulseWidth;
           saveConfig();
 
           Serial<<F("Delays command - ")<<NbPoints<<F(" delays received: ")<<_endl;
@@ -279,6 +282,7 @@ bool loadConfig()
   delay1 = storage.Delay1;
   delay2 = storage.Delay2;
   delayAMP = storage.DelayAMP;
+  delayPC = delay1 - delayAMP - PulseWidth;
   
   return (storage.ConfigVersion == CONFIG_VERSION);
 }
