@@ -20,7 +20,7 @@ https://github.com/sdesalas/Arduino-Queue.h (rev )
 #include <Streaming.h>
 
 // Firmware revision
-String Firmw = "0.0.1";
+String Firmw = "0.0.2";
 
 //Version of config stored in Eeprom
 //Random value. Change this value (to any other value) to revert the config to default values
@@ -83,6 +83,7 @@ volatile unsigned int delay1 = 1270;
 volatile unsigned int delay2 = 0;
 volatile unsigned int delayAMP = 270;
 volatile unsigned int delayPC = delay1 - delayAMP - PulseWidth;
+volatile unsigned int delayPC2 = delay2 - PulseWidth;
 
 void setup() {
   // put your setup code here, to run once:
@@ -177,12 +178,25 @@ void interrupt()
   digitalWrite(AMP_TrigOutPin, LOW);
   
   delayMicroseconds(delayPC);
-  
-  digitalWrite(PC1_TrigOutPin, HIGH);
-  digitalWrite(PC2_TrigOutPin, HIGH);
-  delayMicroseconds(PulseWidth);
-  digitalWrite(PC1_TrigOutPin, LOW);
-  digitalWrite(PC2_TrigOutPin, LOW);
+
+  if(delayPC2 <=0)
+  {
+    digitalWrite(PC1_TrigOutPin, HIGH);
+    digitalWrite(PC2_TrigOutPin, HIGH);
+    delayMicroseconds(PulseWidth);
+    digitalWrite(PC1_TrigOutPin, LOW);
+    digitalWrite(PC2_TrigOutPin, LOW);
+  }
+  else
+  {
+    digitalWrite(PC1_TrigOutPin, HIGH);
+    delayMicroseconds(PulseWidth);
+    digitalWrite(PC1_TrigOutPin, LOW);
+    delayMicroseconds(delayPC2);   
+    digitalWrite(PC2_TrigOutPin, HIGH);    
+    delayMicroseconds(PulseWidth);    
+    digitalWrite(PC2_TrigOutPin, LOW);   
+  }
   
   Trigged=1;
   EIFR = 0x01;  //clear interrupt queue
@@ -263,6 +277,9 @@ void ProcessCommand(String JSONCommand)
           delay2 = storage.Delay2 = Delays[1];
           delayAMP = storage.DelayAMP = Delays[2];
           delayPC = delay1 - delayAMP - PulseWidth;
+          if(delayPC<0) delayPC=0;
+          delayPC2 = delay2 - PulseWidth;
+          if(delayPC2<0) delayPC2=0;
           saveConfig();
 
           Serial<<F("Delays command - ")<<NbPoints<<F(" delays received: ")<<_endl;
