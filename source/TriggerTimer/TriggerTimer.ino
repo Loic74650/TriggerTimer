@@ -179,6 +179,12 @@ void interrupt()
   
   delayMicroseconds(delayPC);
 
+    digitalWrite(PC1_TrigOutPin, HIGH);
+    digitalWrite(PC2_TrigOutPin, HIGH);
+    delayMicroseconds(PulseWidth);
+    digitalWrite(PC1_TrigOutPin, LOW);
+    digitalWrite(PC2_TrigOutPin, LOW);
+/*
   if(delayPC2 <=0)
   {
     digitalWrite(PC1_TrigOutPin, HIGH);
@@ -197,7 +203,7 @@ void interrupt()
     delayMicroseconds(PulseWidth);    
     digitalWrite(PC2_TrigOutPin, LOW);   
   }
-  
+  */
   Trigged=1;
   EIFR = 0x01;  //clear interrupt queue
 }
